@@ -65,7 +65,7 @@
             <ul class="navigation">
               <li class="navigation_item"><a href="/" target="_blank" rel="noopener noreferrer" title="首页">首页</a></li>
               <li class="navigation_item"><a href="/one/microsoft-graph-api-auth" title="microsoft-graph-api-auth">microsoft-graph-api-auth</a></li>
-              <li class="navigation_item"><a href="/tools" title="动态二维码">生成二维码</a></li>
+              <li class="navigation_item"><a href="/tools/qr.html" title="动态二维码">生成二维码</a></li>
             </ul>
           </nav>
         </div>
