@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>图片加水印工具</title>
+
+      <!-- load stylesheets -->
+    
+       <link rel="stylesheet" href="font-awesome-4.5.0/css/font-awesome.min.css"> <!-- Font Awesome, https://fortawesome.github.io/Font-Awesome/ -->
+      <link rel="stylesheet" href="css/bootstrap.min.css">                       <!-- Bootstrap style, http://v4-alpha.getbootstrap.com/ -->
+      <link rel="stylesheet" href="css/templatemo-style.css">                    <!-- Templatemo style -->
+   
+      <link href="css/bootstrap-colorpicker.css" type="text/css" rel="stylesheet">
+      <script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+      <script type="text/javascript" src="js/bootstrap-colorpicker.js"></script> 
+
+      <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+      <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+          <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+            <![endif]--> 
+<script> 
+
+    waterText = {
+        h: 60,
+        w: 130,
+        x: 4,
+        y: 5,
+        color:"#a7a7a7",
+        text:'仅供七牛云使用',
+    };
+    
+
+    function saveWaterText() {
+        window.localStorage.setItem('waterTextStorage', JSON.stringify(waterText))
+    }
+
+    function getWaterText() {
+        var waterTextStorage = localStorage.getItem('waterTextStorage');
+        if( waterTextStorage != null){
+           try {
+            waterText = JSON.parse(waterTextStorage)
+           } catch (error) {
+               console.log("发生了点异常，可能是未存储内容！")
+           }
+        } 
+    }
+
+    getWaterText();
+
+    function imgChoose(params) {
+        var img = new Image();
+        var base64 = getPictureBase64();
+        img.src = base64;
+
+            // 加载完成开始绘制
+        img.onload = function () {
+            //准备canvas环境 
+            var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+            console.log(img.width);
+            console.log(img.height);
+
+            if(canvas.width != img.width){  
+                canvas.width = img.width;
+                canvas.height = img.height;  
+            }
+
+            // 绘制图片
+            ctx.drawImage(img, 0, 0);
+
+            var x_width = (img.width + waterText.w) * 1.0 / waterText.x;
+            var y_height = (img.height + waterText.h) * 1.0 / waterText.y;
+            // 绘制水印
+            // ctx.rotate(30)
+            // for (var vY = 0; vY < waterText.y; vY++) {
+            //     for (var vX = 0; vX < waterText.x; vX++) {
+            //         writeText(ctx, "my images", vX * x_width, vY * y_height);
+            //     }
+            // }
+
+            // 点击增加水印
+            var canvasClick = function (event) {
+                // console.log("全局监听");
+                var x = event.offsetX;
+                var y = event.offsetY;
+                writeText(ctx, waterText.text , x, y);
+            } 
+            canvas.onclick = canvasClick;
+
+            // ctx.rotate(-30)
+        }
+    }
+ 
+
+    function getPictureBase64() {
+        var docObj=document.getElementById("fileChoose"); 
+        if(docObj.files && docObj.files[0]){ 
+            return window.URL.createObjectURL(docObj.files[0]);
+        }else{
+            //IE下，使用滤镜
+            docObj.select();
+            var imgSrc = document.selection.createRange().text;
+            return imgSrc;  
+        }
+        return true;
+    }
+
+    var writeText = function (ctx, text, posX, posY) {
+        ctx.save();
+        ctx.translate(posX, posY);
+        ctx.rotate(20 * Math.PI / 180);
+        ctx.font = "20px microsoft yahei";
+        ctx.fillStyle = waterText.color;
+        ctx.fillText(text, 0, 0);
+        //ctx.translate(-posX, -posY);
+        ctx.rotate(-20 * Math.PI / 180);
+        ctx.restore();
+    }
+
+</script>
+
+
+
+</head>
+
+<body>
+    
+    <div class="container-fluid">
+            
+        <div class="row"> 
+
+            <section class="tm-section-intro">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <div class="tm-wrapper-center">
+                        <h1 class="tm-section-intro-title">简易图片加水印</h1>
+
+                        <div class="input-group mb-2"> 
+                            <input type="text" class="form-control" id="waterTextInput" placeholder="请输入水印文字" >
+                        </div>
+
+                        <input type="hidden" id="color" style=""/>
+                        <p>点击选择水印颜色：<input id="waterColor" type="text" style="width: 37px;" value="" readonly/></p>
+
+                        <canvas id="myCanvas" width="640" height="400" class="thick-green-border">
+                            Your browser does not support the HTML5 canvas tag.
+                        </canvas>
+                        <input type="file" name="file" id="fileChoose" style="width:150px;" onchange="imgChoose();">
+                        <a id="save" class="tm-btn-white-big">导出</a>
+                    </div>            
+                </div>
+            </section>    
+
+        </div>
+ 
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <p class="text-xs-center tm-copyright-text">Develop by <a href="https://github.com/dforel" target="_blank" title="dforel">dforel</a> | 小站 :<a href="https://xhvps.info/" target="_blank" title="星河vps">xhvps.info</a> | 转载请保留来源 </p>
+            </div>
+        </div>
+        
+    </div> <!-- container-fluid -->   
+
+    <!-- load JS files -->
+     
+    <script src="js/tether.min.js"></script> <!-- Tether for Bootstrap, http://stackoverflow.com/questions/34567939/how-to-fix-the-error-error-bootstrap-tooltips-require-tether-http-github-h -->
+    <script src="js/bootstrap.min.js"></script>                 <!-- Bootstrap, http://v4-alpha.getbootstrap.com/ -->
+    <script src="js/jquery.touchSwipe.min.js"></script>         <!-- http://labs.rampinteractive.co.uk/touchSwipe/demos/ -->
+     
+
+    <script>     
+   
+        $(document).ready(function(){
+
+            // 基本实例化:
+            $('#waterColor').colorpicker();
+            
+            $('#waterColor').css('background-color', waterText.color ).val(''); 
+            $('#waterTextInput').val(waterText.text);
+            // 初始化变量结束
+
+            // Example using an event, to change the color of the .jumbotron background:
+            $('#waterColor').on('change', function (event) {
+
+                $('#waterColor').css('background-color', event.color.toString()).val(''); 
+                waterText.color = event.color.toString();
+                saveWaterText();
+            });
+
+            $('#waterTextInput').on('change', function (event) { 
+                // console.log(event);
+                waterText.text = event.target.value;
+                saveWaterText();
+            });
+
+            var butSave = document.getElementById("save");
+            butSave.onclick = function () { 
+                var canvas = document.getElementById("myCanvas"); 
+                /* 
+                * 传入对应想要保存的图片格式的mime类型 
+                * 常见：image/png，image/gif,image/jpg,image/jpeg 
+                */  
+                var tempSrc = canvas.toDataURL("image/jpeg");  
+
+                let a = document.createElement('a');
+                a.href = tempSrc;
+                a.download = '';
+                a.click();
+            };
+            
+
+            /* Smooth Scrolling
+             * https://css-tricks.com/snippets/jquery/smooth-scrolling/
+            --------------------------------------------------------------*/
+            $('a[href*="#"]:not([href="#"])').click(function() {
+                if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') 
+                    && location.hostname == this.hostname) {
+                    
+                    var target = $(this.hash);
+                    target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+                    
+                    if (target.length) {
+                        
+                        $('html, body').animate({
+                            scrollTop: target.offset().top
+                        }, 1000);
+                        return false;
+                    }
+                }
+            }); 
+            
+            /* Enable swiping for tablets and mobile
+             * http://lazcreative.com/blog/adding-swipe-support-to-bootstrap-carousel-3-0/
+             ---------------------------------------------------------------------------------*/
+            if($(window).width() <= 991) {
+                $(".carousel-inner").swipe( {
+                    //Generic swipe handler for all directions
+                    swipeLeft:function(event, direction, distance, duration, fingerCount) {
+                        $(this).parent().carousel('next'); 
+                    },
+                    swipeRight: function() {
+                        $(this).parent().carousel('prev'); 
+                    },
+                    //Default is 75px, set to 0 for demo so any distance triggers swipe
+                    threshold:0
+                });
+            }  
+
+            /* Handle window resize */
+            $(window).resize(function(){
+                if($(window).width() <= 991) {
+                    $(".carousel-inner").swipe( {
+                        //Generic swipe handler for all directions
+                        swipeLeft:function(event, direction, distance, duration, fingerCount) {
+                            $(this).parent().carousel('next'); 
+                        },
+                        swipeRight: function() {
+                            $(this).parent().carousel('prev'); 
+                        },
+                        //Default is 75px, set to 0 for demo so any distance triggers swipe
+                        threshold:0
+                    });
+                 }
+            });              
+                       
+        });
+
+    </script> 
+
+</body>
