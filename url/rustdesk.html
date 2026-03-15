@@ -7,10 +7,11 @@
   try {
     const res = await fetch("https://api.github.com/repos/ldxw/rustdesk/releases");
     const list = await res.json();
-
     const release = list.find(x => /^\d+\.\d+\.\d+$/.test(x.tag_name));
     if (release && release.html_url) {
       window.location.replace(release.html_url);
+    } else {
+      window.location.replace("https://github.com/ldxw/rustdesk/releases");
     }
   } catch (e) {
     window.location.replace("https://github.com/ldxw/rustdesk/releases");
