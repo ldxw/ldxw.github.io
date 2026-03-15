@@ -3,14 +3,19 @@
 <head>
 <meta charset="utf-8">
 <script>
-fetch("https://api.github.com/repos/ldxw/rustdesk/releases")
-  .then(r => r.json())
-  .then(list => {
-    const release = list.find(item => /^v?\d+\.\d+\.\d+$/.test(item.tag_name));
+(async () => {
+  try {
+    const res = await fetch("https://api.github.com/repos/ldxw/rustdesk/releases");
+    const list = await res.json();
+
+    const release = list.find(x => /^\d+\.\d+\.\d+$/.test(x.tag_name));
     if (release && release.html_url) {
-      location.replace(release.html_url);
+      window.location.replace(release.html_url);
     }
-  });
+  } catch (e) {
+    window.location.replace("https://github.com/ldxw/rustdesk/releases");
+  }
+})();
 </script>
 </head>
 <body></body>
