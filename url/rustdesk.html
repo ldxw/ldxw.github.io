@@ -2,11 +2,15 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Latest Tag</title>
 <script>
-fetch("https://api.github.com/repos/ldxw/rustdesk/tags")
-.then(r => r.json())
-.then(d => location.href = "https://github.com/ldxw/rustdesk/tree/" + d[0].name);
+fetch("https://api.github.com/repos/ldxw/rustdesk/releases")
+  .then(r => r.json())
+  .then(list => {
+    const release = list.find(item => /^v?\d+\.\d+\.\d+$/.test(item.tag_name));
+    if (release && release.html_url) {
+      location.replace(release.html_url);
+    }
+  });
 </script>
 </head>
 <body></body>
