@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack  --profile --progress --colors --display-error-details",
-    "dev": "webpack  --display-modules --profile --progress --colors --display-error-details",
-    "dev:hrm": "webpack-dev-server"
+    "dev": "webpack  --display-modules --profile --progress --colors --display-error-details"
   },
   "author": "",
   "license": "ISC",
@@ -32,7 +31,6 @@
     "resolve-url-loader": "^2.2.0",
     "style-loader": "^0.19.0",
     "url-loader": "^0.6.2",
-    "webpack": "^3.8.1",
-    "webpack-dev-server": "^2.9.3"
+    "webpack": "^3.8.1"
   }
 }
